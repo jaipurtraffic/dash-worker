@@ -17,9 +17,9 @@ interface Env {
 	POSTGRES_URL: string;
 }
 
-const queryCurrentTraffic = `SELECT yellow, red, dark_red, ts, x, y FROM traffic
+const queryCurrentTraffic = `SELECT x, y, yellow, red, dark_red, ts FROM traffic
 	WHERE ts = (SELECT MAX(ts) FROM traffic)`;
-const queryCongestedTraffic = `SELECT x, y, yellow, red, dark_red FROM traffic
+const queryCongestedTraffic = `SELECT x, y, yellow, red, dark_red, ts FROM traffic
 	WHERE ts = (SELECT MAX(ts) FROM traffic)
 	ORDER BY (yellow + red + dark_red) DESC
 	LIMIT 10`;
