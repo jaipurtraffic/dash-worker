@@ -61,11 +61,11 @@ const queryCurrentTraffic = `WITH grid_stats AS (
 	JOIN grid_stats g USING (x, y)
 	ORDER BY l.latest_severity DESC;`;
 
-const queryHistory = `'SELECT x, y, ts, yellow, red, dark_red FROM traffic WHERE
-	x = $1 AND y = $2 AND ts >= NOW() - INTERVAL $3 ORDER BY ts DESC'`;
+const queryHistory = `SELECT x, y, ts, yellow, red, dark_red FROM traffic WHERE
+	x = $1 AND y = $2 AND ts >= NOW() - INTERVAL $3 ORDER BY ts DESC`;
 
-const queryHistoryHourly = `'SELECT x, y, ts, yellow, red, dark_red FROM traffic WHERE
-	x = $1 AND y = $2 AND ts >= NOW() - INTERVAL $3 AND EXTRACT(HOUR FROM ts) = $4 ORDER BY ts DESC'`;
+const queryHistoryHourly = `SELECT x, y, ts, yellow, red, dark_red FROM traffic WHERE
+	x = $1 AND y = $2 AND ts >= NOW() - INTERVAL $3 AND EXTRACT(HOUR FROM ts) = $4 ORDER BY ts DESC`;
 
 const querySustained = `WITH severity_threshold AS (
 		SELECT
