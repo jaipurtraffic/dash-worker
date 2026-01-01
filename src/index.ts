@@ -174,7 +174,10 @@ const maxDurations: Record<string, string> = {
 	'6h': '6h',
 	'12h': '12h',
 	'24h': '24h',
+	'3d': '3d',
 	'7d': '7d',
+	'14d': '14d',
+	'30d': '30d',
 };
 
 const commonHeaders = {
