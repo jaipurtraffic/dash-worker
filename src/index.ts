@@ -64,9 +64,6 @@ const queryCurrentTraffic = `WITH grid_stats AS (
 const queryHistory = `SELECT x, y, ts, yellow, red, dark_red FROM traffic WHERE
 	x = $1 AND y = $2 AND ts >= NOW() - CAST($3 AS INTERVAL) ORDER BY ts DESC`;
 
-const queryHistoryHourly = `SELECT x, y, ts, yellow, red, dark_red FROM traffic WHERE
-	x = $1 AND y = $2 AND ts >= NOW() - CAST($3 AS INTERVAL) AND EXTRACT(HOUR FROM ts) = $4 ORDER BY ts DESC`;
-
 const querySustained = `WITH severity_threshold AS (
 		SELECT
 			percentile_cont(0.95)
@@ -196,9 +193,6 @@ export default {
 			case '/history':
 				return await handleHistory(request, env);
 
-			case '/history-hourly':
-				return await handleHistoryHourly(request, env);
-
 			case '/sustained':
 				return await handleSustained(env);
 
@@ -234,22 +228,6 @@ async function handleHistory(request: Request, env: Env): Promise<Response> {
 	await sql.connect();
 
 	const result = await sql.query(queryHistory, [x, y, duration]);
-	return new Response(JSON.stringify(result.rows), {
-		headers: commonHeaders,
-	});
-}
-
-async function handleHistoryHourly(request: Request, env: Env): Promise<Response> {
-	const url = new URL(request.url);
-	const duration = limitMaxDuration(url.searchParams.get('duration'));
-	const x = url.searchParams.get('x') || '11';
-	const y = url.searchParams.get('y') || '8';
-	const hour = url.searchParams.get('hour') || '15';
-
-	const sql = new Client({ connectionString: env.POSTGRES_URL });
-	await sql.connect();
-
-	const result = await sql.query(queryHistoryHourly, [x, y, duration, hour]);
 	return new Response(JSON.stringify(result.rows), {
 		headers: commonHeaders,
 	});
